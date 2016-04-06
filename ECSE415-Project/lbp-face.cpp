@@ -3,9 +3,10 @@
 #include <opencv2/opencv.hpp>
 
 void get_lbp_representation(cv::Mat &const img , cv::Mat &lbp);
+void compute_lbp_histogram(cv::Mat &const lbp, int grid_size, cv::Mat lbp_histogram);
 
 void lbp_train() {
-
+	
 }
 
 void get_lbp_representation(cv::Mat &const img , cv::Mat &lbp) {
@@ -40,4 +41,24 @@ void get_lbp_representation(cv::Mat &const img , cv::Mat &lbp) {
 			lbp.at<unsigned char>(row, col) = binary_pattern;
 		}
 	}
+}
+
+void compute_lbp_histogram(cv::Mat &const lbp, int grid_size, cv::Mat lbp_histogram) {
+	std::vector<cv::Mat> sections;
+
+	/* Get number of pixels between each grid box */
+	int HEIGHT = lbp.rows;
+	int WIDTH = lbp.cols;
+
+	int delta_height = HEIGHT / grid_size;
+	int delta_width = WIDTH / grid_size;
+
+	/* Seperate Grid into a Vector of Matricies */
+	for (int row=0; row<grid_size; row++) {
+		for (int col=0; col<grid_size; col++) {
+			cv::Rect roi(col * delta_width, row * delta_height, delta_width, delta_height);
+			sections.push_back(cv::Mat(lbp, roi));
+		}
+	}
+
 }

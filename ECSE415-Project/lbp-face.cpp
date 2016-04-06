@@ -6,7 +6,13 @@ void get_lbp_representation(cv::Mat &const img , cv::Mat &lbp);
 void compute_lbp_histogram(cv::Mat &const lbp, int grid_size, cv::Mat lbp_histogram);
 
 void lbp_train() {
-	
+	cv::Mat img = cv::imread("QMUL/AdamBGrey/AdamB_060_090.ras");
+	cv::Mat lbp;
+
+	get_lbp_representation(img, lbp);
+
+	cv::imshow("lbp version", lbp);
+	cv::waitKey();
 }
 
 void get_lbp_representation(cv::Mat &const img , cv::Mat &lbp) {
@@ -18,7 +24,7 @@ void get_lbp_representation(cv::Mat &const img , cv::Mat &lbp) {
 		for (int col=1; col<img.cols-1; col++) {
 			/* calculate LBP descriptor */
 
-			int center = img.at<int>(row, col);
+			unsigned char center = img.at<unsigned char>(row, col);
 			unsigned char binary_pattern = 0;
 			/* Grid of neighboring pixels
 			 *	 _ _ _ _
@@ -28,17 +34,17 @@ void get_lbp_representation(cv::Mat &const img , cv::Mat &lbp) {
 			 *   - - - -
 			 */
 			/* set bits in accordance with above grid */
-			binary_pattern |= (img.at<int>(row-1, col-1) > center) << 7;	// 1
-			binary_pattern |= (img.at<int>(row-1, col) > center) << 6;		// 2
-			binary_pattern |= (img.at<int>(row-1, col+1) > center) << 5;	// 3
-			binary_pattern |= (img.at<int>(row, col+1) > center) << 4;		// 4
-			binary_pattern |= (img.at<int>(row+1, col+1) > center) << 3;	// 5
-			binary_pattern |= (img.at<int>(row+1, col) > center) << 2;		// 6
-			binary_pattern |= (img.at<int>(row+1, col-1) > center) << 1;	// 7
-			binary_pattern |= (img.at<int>(row, col-1) > center) << 0;		// 8
+			binary_pattern |= (img.at<unsigned char>(row-1, col-1) > center) << 7;	// 1
+			binary_pattern |= (img.at<unsigned char>(row-1, col) > center) << 6;		// 2
+			binary_pattern |= (img.at<unsigned char>(row-1, col+1) > center) << 5;	// 3
+			binary_pattern |= (img.at<unsigned char>(row, col+1) > center) << 4;		// 4
+			binary_pattern |= (img.at<unsigned char>(row+1, col+1) > center) << 3;	// 5
+			binary_pattern |= (img.at<unsigned char>(row+1, col) > center) << 2;		// 6
+			binary_pattern |= (img.at<unsigned char>(row+1, col-1) > center) << 1;	// 7
+			binary_pattern |= (img.at<unsigned char>(row, col-1) > center) << 0;		// 8
 
 			/* set data in output Matrix */
-			lbp.at<unsigned char>(row, col) = binary_pattern;
+			lbp.at<unsigned char>(row-1, col-1) = binary_pattern;
 		}
 	}
 }
